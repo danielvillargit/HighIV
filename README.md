@@ -21,3 +21,10 @@ TDAmeritrade API Key -- Line 215
 | Pretty lil Table Column 1 | Pretty lil Table Column 2 |
 |---------------------------|---------------------------|
 |     **Sup**                   |      Hi There             |
+
+
+```
+function test() {
+  console.log("notice the blank line before this function?");
+}
+```
