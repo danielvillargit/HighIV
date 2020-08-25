@@ -8,7 +8,8 @@ Created on Tue Aug 18 00:20:40 2020
 !pip install selenium
 from selenium_barchart_2 import *
 tc=OptionSearch()
-#tc.BarchartImport()
+tc.BarchartImport()
 tc.OptionImport()
 tc.AmerConnect()
+tc.TChart()
 
