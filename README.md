@@ -1,6 +1,8 @@
 # HighIV
 
-**High Implied Volatility Options Analytics **
+
+**High Implied Volatility Options Analytics**
+
 
 This project takes high implied volatility options data from barchart.com and turns it into actionable trading decisions via technical analysis. The
 purpose of this build is to supplement an income trading strategy and automate mundane processes for efficiency. The ultimate goal is to devote more attention
@@ -10,7 +12,9 @@ Selenium is used to download a csv file of potential setups from barchart.com an
 using common technical analysis indicators are generated for each ticker using Tradingview. Option chain information is imported via the TDAmeritradeAPI where
 all out of the money strikes are stored as a Dataframe. Requests are limited to 50 per minute to underload the maximum requests allowed by a TD Developer account.
 
+
 **Upcoming Release**
+
 
 The next major release of this package will include taking the data and graphs from this project and creating a static dynamic web page using Django.
 The idea is to create a clean UI that shows all information gathered by class OptionSearch for each ticker individually.
