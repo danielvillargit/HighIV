@@ -25,7 +25,7 @@ The idea is to create a clean UI that shows all information gathered by class Op
 |     **BarchartImport**                   |      Downloads csv file from barchart.com             |
 |     **OptionImport**                   |      Compiles information from barchart csv file and does basic datacleanup            |
 |     **TChart**                   |      Saves screenshot of tickers with technical indicators from Tradingview's interactive chart            |
-|     **GetEarnings**                   |      Scrapes beta and earnings data form finviz.com             |
+|     **GetEarnings**                   |      Scrapes beta and earnings data from finviz.com             |
 |     **AmerConnect**                   |      Requests Option Chains from TDAmeritradeAPI            |
 
 
