@@ -13,17 +13,16 @@ import pandas as pd
 import requests
 import json
 from datetime import *
-import datetime
 import time
 import os
 
-#!pip install django
+
 class OptionSearch:
     
     def __init__(self):
         
         
-        print("im in.")
+        print("I'm in.")
 
     #Loginto Barchart account and download CSV
     def BarchartImport(self):
@@ -106,7 +105,7 @@ class OptionSearch:
 
 
     def TChart(self):
-        #adblocker install
+        
         iter_ = 1
         while iter_ < 6:
             try:    
@@ -126,9 +125,9 @@ class OptionSearch:
                 driver.get("https://www.tradingview.com/")
                 
                 driver.find_element_by_xpath("//a[@data-type='chart']").click()
-                print("good copy.")
-                #inserting ticker names
-                #ar_ = csv3['Symbol']
+                
+                
+                #adding graphs each Ticker                
                 for i in ar_:    
                     elem =driver.find_element_by_xpath("//input[@class='input-3lfOzLDc']")
                     elem.click()
@@ -161,8 +160,8 @@ class OptionSearch:
                                 elem = driver.find_element_by_xpath("//input[@data-role='search']")
                                 elem.send_keys(Keys.BACKSPACE)
                     time.sleep(3)
-                    dash_ ='\\'
-                    file_name = r"C:{}Pythonsaves{}{}.png".format(dash_,dash_,i)
+                    
+                    file_name = r"C:\Pythonsaves\{}.png".format(i)
                     driver.save_screenshot(file_name)
                     time.sleep(3)
                 
@@ -209,7 +208,7 @@ class OptionSearch:
         
         cond_= datetime.datetime.today().weekday()
         if cond_ < 4:
-            beg_date = datetime.datetime.today()#.strftime("%Y-%m-%d")
+            beg_date = datetime.datetime.today()
             beg_date += datetime.timedelta(days=(4-cond_))
             end_date = beg_date
             end_date += datetime.timedelta(days=31)
