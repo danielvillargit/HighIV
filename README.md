@@ -6,7 +6,7 @@
 
 This project takes high implied volatility options data from barchart.com and turns it into actionable trading decisions via technical analysis. The
 purpose of this build is to supplement an income trading strategy and automate mundane processes for efficiency. The ultimate goal is to devote more attention
-to analysis of potential stock setups rather than searching for good setups hand by hand. 
+to analysis of potential stock setups rather than searching for good setups solely by hand. 
 
 Selenium is used to download a csv file of potential setups from barchart.com and imported to a pandas dataframe where it is cleaned up. From there, charts
 using common technical analysis indicators are generated for each ticker using Tradingview. Option chain information is imported via the TDAmeritradeAPI where
