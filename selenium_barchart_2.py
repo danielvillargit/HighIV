@@ -21,43 +21,57 @@ class OptionSearch:
     
     def __init__(self):
         
-        
+        pd.set_option('display.max_rows',500)
+        pd.set_option('display.max_columns',500)
+        pd.set_option('display.width',1000)
         print("I'm in.")
 
     #Loginto Barchart account and download CSV
+    
+    def path_init(self):
+        global path_adblock , options_ , driver , action
+        
+        
+        path_adblock=r'C:\Users\Daniel\Downloads\Adblock.crx'
+        options_= Options()
+        options_.add_extension(path_adblock)
+        driver = webdriver.Chrome(ChromeDriverManager().install(),options=options_)
+        driver.set_window_size(1024, 600)
+        driver.maximize_window()
+        action=ActionChains(driver)
+    
     def BarchartImport(self):
         iter_=1
         current_date = str(input("Insert Date in MM-DD-YYYY format: "))
         bar_user = str(input("Barchart Username: "))
         bar_pass = str(input("Barchart Password: "))
-        while iter_ < 6:
+        
+        while iter_ < 2:
             try:
                 
-                path_adblock=r'C:\Users\Daniel\Downloads\Adblock.crx'
-                options_= Options()
-                options_.add_extension(path_adblock)
-                driver = webdriver.Chrome(ChromeDriverManager().install(),options=options_)
-                driver.set_window_size(1024, 600)
-                driver.maximize_window()
-                action=ActionChains(driver)
+                self.path_init()
                 
                 driver.get("https://www.barchart.com/login")
                 elem=driver.find_element_by_xpath("//input[@placeholder='Login with email']")
                 elem.send_keys(bar_user)
                 time.sleep(2)
+                
                 elem=driver.find_element_by_xpath("//input[@placeholder='Password']")
                 elem.send_keys(bar_pass)
                 time.sleep(2)
                 
                 elem=driver.find_element_by_xpath("//button[@class='bc-button login-button']").click()
+                # write code to check if successfully went through login page
+                
                 driver.get("https://www.barchart.com/options/highest-implied-volatility/stocks")
                 driver.get("https://www.barchart.com/options/highest-implied-volatility/stocks")
                 driver.find_element_by_css_selector("a.toolbar-button.download").click()
                 time.sleep(4)
-                try:
-                    elem = driver.find_element_by_xpath("//*[contains(text(), 'Download Anyway' )]").click()
-                except NoSuchElementException:
-                    print(r'CSV seems to contain < 1000 lines. This is iteration attempt {}.'.format(iter_))
+                
+                elem = driver.find_element_by_xpath("//*[contains(text(), 'Download Anyway' )]").click()
+                
+            except NoSuchElementException:
+                print(r'CSV seems to contain < 1000 lines. This is iteration attempt {}.'.format(iter_))
                 time.sleep(4)
                 path_test = r'C:\Users\Daniel\Downloads\highest-implied-volatility-stocks-options-{}.csv'.format(current_date)
                 if os.path.isfile(path_test) == True:
@@ -67,8 +81,9 @@ class OptionSearch:
                 driver.quit()
                 iter_ = 6
                 print("Successful download.")
-            except:
+            except Exception as exp:
                 driver.quit()
+                print(exp)
                 print("Retrying Attempt {} failed.".format(iter_))
                 iter_+=1
                 continue
@@ -77,37 +92,44 @@ class OptionSearch:
     def OptionImport(self):
         #read Barchart CSV and assign Ticker names
         try:
-            global csv3
-            global csvimport2
+            global IV_list
+            global IV_list_2
+            global IV_list_3
+            global public_company_list
+            global IV3_symbol
             global ar_
+            
             optiondate = str(input("Insert Date in MM-DD-YYYY format: "))
-            df=pd.read_csv(r"C:\Users\Daniel\Downloads\highest-implied-volatility-stocks-options-{}.csv".format(optiondate))
-            df.head()
-            df=df.drop_duplicates(subset=['Symbol'],keep = 'last')
-            csvimport = pd.DataFrame(df)
-            csvimport=csvimport.reset_index()
-            del csvimport['index']
-            csvimport = csvimport.drop([len(csvimport['Symbol'])-1])
-            csvimport = csvimport[csvimport['Price']>=10]
-
-            df2=pd.read_csv(r'C:\Users\Daniel\Downloads\companylist.csv')
-            csvimport2=pd.DataFrame(df2)
-            csvimport2=df2.drop_duplicates(subset='Name',keep='last')
-            csvimport2=csvimport2[csvimport2['Exchange'].isin(['AMEX','NYSE','NQNM'])]
-            csv3=pd.merge(csvimport,csvimport2[['Symbol','Name']],how='left',left_on=['Symbol'],right_on=['Symbol'])
-            ar_ = csv3['Symbol']
+            IV_list = pd.read_csv(r"C:\Users\Daniel\Downloads\highest-implied-volatility-stocks-options-{}.csv".format(optiondate))
+            IV_list = IV_list.drop_duplicates(subset=['Symbol'],keep = 'last')
+            
+            IV_list_2 = pd.DataFrame(IV_list)
+            IV_list_2 = IV_list_2.reset_index()
+            
+            IV_list_2 = IV_list_2.drop([ len(IV_list_2['Symbol']) - 1])
+            IV_list_2 = IV_list_2[ IV_list_2['Price'] >= 10]
+            del IV_list_2['index']
+            
+            public_company_list = pd.read_csv(r'C:\Users\Daniel\Downloads\companylist.csv')
+            public_company_list = pd.DataFrame(public_company_list)
+            public_company_list = public_company_list.drop_duplicates(subset='Name',keep='last')
+            public_company_list = public_company_list[ public_company_list['Exchange'].isin(['AMEX','NYSE','NQNM'])]
+            
+            IV_list_3 = pd.merge(IV_list_2, public_company_list[['Symbol','Name']],how='left',left_on=['Symbol'],right_on=['Symbol'])
+            ar_ = IV_list_3['Symbol']
             print("Import successful.")
-        except:
+        except Exception as EXP:
+            print(EXP)
             print("Could not find file. Are you sure file name and date exist?")
             
  
-
+    
 
 
     def TChart(self):
         
         iter_ = 1
-        while iter_ < 6:
+        while iter_ < 3:
             try:    
                 
                 path_adblock=r'C:\Users\Daniel\Downloads\Adblock.crx'
@@ -126,13 +148,14 @@ class OptionSearch:
                 
                 driver.find_element_by_xpath("//a[@data-type='chart']").click()
                 
-                
                 #adding graphs each Ticker                
                 for i in ar_:    
-                    elem =driver.find_element_by_xpath("//input[@class='input-3lfOzLDc']")
+                    elem =driver.find_element_by_xpath("/html/body/div[2]/div[2]/div/div/div[1]/div/div/div/div/div/div[1]")
                     elem.click()
-                    driver.implicitly_wait(2)
-                    elem.send_keys(Keys.DELETE+i+Keys.ENTER)
+                    time.sleep(2)
+                    elem = driver.find_element_by_xpath("//input[@class='search-2XsDfq16 upperCase-UYMmoP0p input-2pz7DtzH']")
+                    elem.click()
+                    elem.send_keys(Keys.BACKSPACE+Keys.BACKSPACE+Keys.BACKSPACE+Keys.BACKSPACE+i+Keys.ENTER)
              
                     if i==ar_[0]:
                         elem = driver.find_element_by_xpath("//div[@data-name='open-indicators-dialog']")
@@ -147,18 +170,18 @@ class OptionSearch:
                                 string_ = 'MACD'
                             elem = driver.find_element_by_xpath("//input[@data-role='search']")
                             elem.send_keys(string_)
-                            driver.implicitly_wait(1)
-                            if i!=2:
-                                elem = driver.find_element_by_xpath("//div[@class='main-34wD0nIh']")
-                                elem.click()
-                            else:
-                                elem = driver.find_element_by_xpath("/html/body/div[8]/div/div/div[1]/div/div[3]/div[2]/div/div/div[2]")
+                            
+                            
+                            elem = driver.find_element_by_xpath("//div[@class='main-34wD0nIh']")
+                            elem.click()
+                            if i==2:
+                                elem = driver.find_element_by_xpath("//span[@class='close-3NTwKnT_']")
                                 elem.click()
                         
                     
-                            for x in string_:
-                                elem = driver.find_element_by_xpath("//input[@data-role='search']")
-                                elem.send_keys(Keys.BACKSPACE)
+                            #for x in string_:
+                            #    elem = driver.find_element_by_xpath("//input[@data-role='search']")
+                            #    elem.send_keys(Keys.BACKSPACE)
                     time.sleep(3)
                     
                     file_name = r"C:\Pythonsaves\{}.png".format(i)
@@ -166,40 +189,47 @@ class OptionSearch:
                     time.sleep(3)
                 
                 
-            except:
+            except Exception as EXP:
                 time.sleep(2)
                 driver.quit()
                 print("Attempt {} failed. Retrying...".format(iter_))
+                print(EXP)
                 iter_ += 1
                 time.sleep(5)
-                
-                if iter_ == 5:
-                    print("Final attempt failed. Exiting.")
-                
-                else:
-                    continue
-                iter_ +=1
+            finally:
+                print("Finished screenshotting Technicals")
+                driver.quit()
                 
 
     def GetEarnings(self):
         #Finviz scrape earnings
-        driver = webdriver.Chrome(ChromeDriverManager().install())
         
-        print(csv3)
-        count_ = 0
+        self.path_init()
+        
+        
         for j,i in enumerate(ar_):
-            url_ = r"https://finviz.com/quote.ashx?t={}&ty=c&ta=1&p=d".format(i)
-            driver.get(url_)
-            edate =driver.find_element_by_xpath("/html/body/table[3]/tbody/tr[1]/td/table/tbody/tr[7]/td/table/tbody/tr[11]/td[6]").text
-            print(edate)
-            beta = driver.find_element_by_xpath("/html/body/table[3]/tbody/tr[1]/td/table/tbody/tr[7]/td/table/tbody/tr[7]/td[12]").text
-            csv3.loc[count_,'Earnings Date'] = edate
-            csv3.loc[count_,'Beta'] = beta
-            print(csv3['Earnings Date'])
-            count_ = count_+1
-            if j==5:
-                break
-        return csv3
+            try: 
+                url_ = r"https://finviz.com/quote.ashx?t={}&ty=c&ta=1&p=d".format(i)
+                driver.get(url_)
+                edate =driver.find_element_by_xpath("/html/body/div[4]/div/table[2]/tbody/tr[11]/td[6]/b").text
+                print(edate)
+                
+                
+                beta = driver.find_element_by_xpath("/html/body/div[4]/div/table[2]/tbody/tr[7]/td[12]/b").text
+                dividend = driver.find_element_by_xpath("/html/body/div[4]/div/table[2]/tbody/tr[8]/td[2]/b").text
+                marketcap = driver.find_element_by_xpath("/html/body/div[4]/div/table[2]/tbody/tr[2]/td[2]/b").text
+                
+                IV_list_3.loc[j,'Earnings Date'] = edate
+                IV_list_3.loc[j,'Beta'] = beta
+                IV_list_3.loc[j,'Div'] = dividend
+                IV_list_3.loc[j,'Market Cap'] = marketcap
+                IV_list_3.fillna("-",inplace = True)
+                print(IV_list_3['Earnings Date'])
+                
+            except:
+                continue
+            
+        return IV_list_3
     
     def AmerConnect(self):
         #Connecting to TDAmeritradeAPI
@@ -249,10 +279,13 @@ class OptionSearch:
                 continue
         
         
-    
-        
-            
-    
+if __name__ == "__main__":
+    r = OptionSearch()
+    #r.path_init()
+    #r.BarchartImport()
+    r.OptionImport()
+    #r.GetEarnings()
+    r.TChart()
     
 
 
