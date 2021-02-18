@@ -284,8 +284,8 @@ if __name__ == "__main__":
     #r.path_init()
     #r.BarchartImport()
     r.OptionImport()
-    #r.GetEarnings()
-    r.TChart()
+    r.GetEarnings()
+    #r.TChart()
     
 
 
