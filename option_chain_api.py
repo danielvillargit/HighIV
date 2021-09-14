@@ -10,16 +10,30 @@ import pandas as pd
 
 ticker = 'SPY'
 toke = 'H4WiYj0CVcFpz7hZeFpj9uxKJxcJ'
+btoke = r'Bearer {}'.format(toke)
 expiry = '2021-09-17'
 
 res = requests.get('https://sandbox.tradier.com/v1/markets/options/chains',
                    params={'symbol':ticker,'expiration': expiry , 'greeks': 'false'},
-                   headers={'Authorization': r'Bearer {}'.format(toke),'Accept': 'application/json'})
+                   headers={'Authorization': btoke,'Accept': 'application/json'})
 
 json_response = res.json()
 
 print(res.status_code)
 print(json_response)
+
+
+#res2 returns response200
+res2 = requests.get('https://sandbox.tradier.com/v1/markets/quotes',
+                   params={'symbols': ticker, 'greeks': 'false'},
+                   headers={'Authorization': btoke, 'Accept': 'application/json'})
+
+
+res2.json()
+print(res2.status_code)
+print(res2)
+
+
 
 
 
