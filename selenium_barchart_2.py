@@ -9,6 +9,7 @@ from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import NoSuchElementException
 import pandas as pd
 import requests
 import json
@@ -52,6 +53,8 @@ class OptionSearch:
                 self.path_init()
                 
                 driver.get("https://www.barchart.com/login")
+                time.sleep(1)
+                driver.find_element_by_xpath('//body').send_keys(Keys.CONTROL+'w')
                 elem=driver.find_element_by_xpath("//input[@placeholder='Login with email']")
                 elem.send_keys(bar_user)
                 time.sleep(2)
@@ -100,7 +103,7 @@ class OptionSearch:
             global ar_
             
             optiondate = str(input("Insert Date in MM-DD-YYYY format: "))
-            IV_list = pd.read_csv(r"C:\Users\Daniel\Downloads\highest-implied-volatility-stocks-options-{}.csv".format(optiondate))
+            IV_list = pd.read_csv(r"C:\Users\Daniel\Downloads\stocks-highest-implied-volatility-{}.csv".format(optiondate))
             IV_list = IV_list.drop_duplicates(subset=['Symbol'],keep = 'last')
             
             IV_list_2 = pd.DataFrame(IV_list)
@@ -118,10 +121,14 @@ class OptionSearch:
             IV_list_3 = pd.merge(IV_list_2, public_company_list[['Symbol','Name']],how='left',left_on=['Symbol'],right_on=['Symbol'])
             ar_ = IV_list_3['Symbol']
             print("Import successful.")
+            
+            return ar_
+        
         except Exception as EXP:
             print(EXP)
             print("Could not find file. Are you sure file name and date exist?")
             
+        
  
     
 
@@ -153,7 +160,7 @@ class OptionSearch:
                     elem =driver.find_element_by_xpath("/html/body/div[2]/div[2]/div/div/div[1]/div/div/div/div/div/div[1]")
                     elem.click()
                     time.sleep(2)
-                    elem = driver.find_element_by_xpath("//input[@class='search-2XsDfq16 upperCase-UYMmoP0p input-2pz7DtzH']")
+                    elem = driver.find_element_by_xpath("//input[@placeholder='Search']")
                     elem.click()
                     elem.send_keys(Keys.BACKSPACE+Keys.BACKSPACE+Keys.BACKSPACE+Keys.BACKSPACE+i+Keys.ENTER)
              
@@ -170,12 +177,13 @@ class OptionSearch:
                                 string_ = 'MACD'
                             elem = driver.find_element_by_xpath("//input[@data-role='search']")
                             elem.send_keys(string_)
+                            time.sleep(1)
                             
-                            
-                            elem = driver.find_element_by_xpath("//div[@class='main-34wD0nIh']")
+                            elem = driver.find_element_by_xpath("//div[@class='main-3Ywm3-oo']")
                             elem.click()
+                            time.sleep(1)
                             if i==2:
-                                elem = driver.find_element_by_xpath("//span[@class='close-3NTwKnT_']")
+                                elem = driver.find_element_by_xpath("//span[@data-name='close']")
                                 elem.click()
                         
                     
@@ -281,11 +289,11 @@ class OptionSearch:
         
 if __name__ == "__main__":
     r = OptionSearch()
-    #r.path_init()
+    r.path_init()
     #r.BarchartImport()
     r.OptionImport()
-    r.GetEarnings()
-    #r.TChart()
+    #r.GetEarnings()
+    r.TChart()
     
 
 
