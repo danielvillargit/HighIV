@@ -36,7 +36,7 @@ def main(ticker_list):
 
     toke = 'H4WiYj0CVcFpz7hZeFpj9uxKJxcJ'
     btoke = r'Bearer {}'.format(toke)
-    column_list = ['symbol','root_symbol','description','strike','bid','ask','option_type','open_interest','volume']
+    column_list = ['symbol','root_symbol','description','strike','bid','ask','option_type','open_interest','volume','expiration_date']
     
     
 
@@ -82,8 +82,9 @@ def main(ticker_list):
                 import_chain2 = import_chain2.append(import_chain.loc[mid1-12:mid1])
                 import_chain2 = import_chain2.append(import_chain.loc[mid2:mid2+12])
                 del import_chain
-                del import_chain2["center_strike"]
+                del import_chain2["center_strike"]  
                 del import_chain2["description"]
+                del import_chain2["open_interest"]
                 #import_chain2 = import_chain2.reset_index()
                 
                 
