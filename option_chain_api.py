@@ -85,7 +85,7 @@ def main(ticker_list):
                 del import_chain2["center_strike"]  
                 del import_chain2["description"]
                 del import_chain2["open_interest"]
-                #import_chain2 = import_chain2.reset_index()
+                
                 
                 
                 
