@@ -71,18 +71,21 @@ def df_to_treeview(source_df):
         
         tv.insert(parent='',index=i,values=tuple(source_df.loc[i].values))
         
-    tv.place(x = 0,y = 0)
+    if b4b5_var == 1:
+        frame1.place(x=20,y=500)
+        tv.place(x = 0,y = 0)  
+     
     
 
 def sourcefilterquery(*event):
     global start_
-    #filter doesn't work completely right yet, need to tweak root_symbol
+
     
     df_to_treeview(source_[(source_["root_symbol"] == k1[start_])  & (source_["expiration_date"] == cb3_sv.get()) & (source_["option_type"] == cb2_sv.get())   ])
 
 
 def togglechain(*event):
-    cb4_sv.set(~cb4_sv.get())
+    
     if cb4_sv.get() == True:
         print("TRUE")
         
@@ -106,7 +109,7 @@ start_ = 0
 k0 = sb.OptionSearch()
 k1 = ["AMC","APLS","AUPH"]
 path = r'C:\Pythonsaves\8-23-2021\{}.png'.format(k1[start_])
-source_ = oca.main(["AMC","APLS"])
+source_ = oca.main(k1)
 
 #GUI Initialization
 root = tk.Tk()
@@ -116,7 +119,7 @@ cb3_sv = tk.StringVar()
 lb1_sv = tk.StringVar()
 root.state("zoomed")
 cb4_sv = tk.BooleanVar()
-cb4_sv.set(False)
+
 #widgets
 
 #wombo_combo = ttk.Combobox(root,values=tuple(k1),textvariable=get_wombo)   
@@ -130,7 +133,7 @@ label1.place(x=20,y=30)
 label2 = tk.Label(root,text=k1[start_])
 label2.place(x=40,y=0)
 frame1 = tk.Frame(root,width=1450,height=500)
-frame1.place(x=20,y=500)
+#frame1.place(x=20,y=500)
 
 
 cb2 = ttk.Combobox(root,values=tuple(source_["option_type"].unique()),textvariable=cb2_sv)
@@ -142,7 +145,27 @@ cb3.place(x=250,y=0)
 cb3.bind("<<ComboboxSelected>>",sourcefilterquery)
 
 
-#cb4 = tk.Checkbutton(root,text='ChainInvisible',textvariable=cb4_sv,command=togglechain)
+def toggleoption():
+    if b4b5_var.get() == 1:
+        frame1.place(x=20,y=500)
+        tv.place(x = 0,y = 0)
+    if b4b5_var.get() == 2:
+        frame1.place_forget()
+        tv.place_forget()
+
+
+
+b4b5_var = tk.IntVar()
+b4 = tk.Radiobutton(root,text="Show Option Chain",variable = b4b5_var, value = 1,command = toggleoption)
+b4.place(x=500,y=5)
+
+
+b5 = tk.Radiobutton(root,text="Hide Option Chain",variable = b4b5_var, value = 2,command = toggleoption)
+b5.place(x=650,y=5)
+
+
+
+
 #cb4.bind("<<ButtonSelected>>",togglechain)
 #cb4.place(x=500,y=5)
 
