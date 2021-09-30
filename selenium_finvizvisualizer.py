@@ -67,7 +67,9 @@ class FinvizVisualizer:
                 img = driver.find_element_by_xpath("//canvas[@class='second']")
                 img_save_path = self.check_path + r'\\{}.png'.format(f)
                 img.screenshot(img_save_path)
-            
+                
+                
+                
             except Exception as exp:
                 print(exp)
             
@@ -80,7 +82,8 @@ class FinvizVisualizer:
         else:
             os.makedirs(self.check_path)
             
-    
+    ###add a way to add tickers to the optionvisualizer dataset
+    ###add a way to get industry from finviz and add to self.source_data
         
 if __name__ == "__main__":
     fv = FinvizVisualizer()

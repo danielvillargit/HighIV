@@ -25,15 +25,17 @@ def getdate():
     return fridays
 
 
-def main(ticker_list):
+def maincall(ticker_path):
     
     #ticker_data_selenium = OptionSearch()
     #ticker_data_selenium.BarchartImport()
     
     #ticker = ticker_data_selenium.OptionImport()
-
-    ticker = ticker_list
-
+    
+    ticker = pd.read_csv(ticker_path)
+    ticker = pd.DataFrame(ticker)
+    ticker.sort_values(by=["Ticker"],ascending=True,inplace=True)
+    
     toke = 'H4WiYj0CVcFpz7hZeFpj9uxKJxcJ'
     btoke = r'Bearer {}'.format(toke)
     column_list = ['symbol','root_symbol','description','strike','bid','ask','option_type','open_interest','volume','expiration_date']
@@ -44,8 +46,8 @@ def main(ticker_list):
     
     import_chain2 = pd.DataFrame(data=None,columns=column_list)
     
-    for tick_ in ticker:
-        
+    for num,tick_ in enumerate(ticker["Ticker"]):
+        print((num+1) + "//" + len(ticker["Ticker"]))
         for f in expiry:
             try:
                 
@@ -95,9 +97,13 @@ def main(ticker_list):
     print(import_chain2)
     return import_chain2
             
-    
 
 if __name__ == "__main__":
-    #getdate()
-    main()
+    path = r'C:\Users\Daniel\HighIV\opvis.csv'
+    csv_exportpath = r'C:\Users\Daniel\HighIV\opchain.csv'
+    return_df = maincall(path)
+    return_df.to_csv(csv_exportpath)
+    
+
+
 
