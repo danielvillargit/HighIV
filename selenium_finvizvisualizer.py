@@ -48,7 +48,7 @@ class FinvizVisualizer:
         driver.set_window_size(1024, 600)
         driver.maximize_window()
         action=ActionChains(driver)
-        
+        driver.switch_to_window(driver.window_handles[0])
         
     def getpicture(self):
         
@@ -58,7 +58,7 @@ class FinvizVisualizer:
         self.source_data = pd.read_csv(self.download_path + "\\opvis.csv")
         self.source_data = pd.DataFrame(self.source_data)
         
-        
+        del self.source_data["Unnamed: 0"]
             
         for f in self.source_data["Ticker"]:
             try:   
