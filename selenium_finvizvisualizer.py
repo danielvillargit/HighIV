@@ -20,7 +20,7 @@ class FinvizVisualizer:
         global current_date
         print("Finviz Visualizer Object Created")
         
-        self.download_path = r'C:\Users\Daniel\HighIV'
+        self.download_path = r'C:\Users\Daniel\server_001\HighIV_2'
         current_date = datetime.datetime.today()
         current_date = current_date.strftime("%Y-%m-%d")
         
@@ -33,7 +33,7 @@ class FinvizVisualizer:
         
         self.download_path = download_path
         
-        path_adblock=r'C:\Users\Daniel\HighIV\Adblock.crx'
+        path_adblock=r'C:\Users\Daniel\server_001\HighIV_2\Adblock.crx'
         options_= Options()
         
         if self.download_path is not None:
@@ -67,12 +67,10 @@ class FinvizVisualizer:
                 img = driver.find_element_by_xpath("//canvas[@class='second']")
                 img_save_path = self.check_path + r'\\{}.png'.format(f)
                 img.screenshot(img_save_path)
-                
-                
-                
+            
             except Exception as exp:
                 print(exp)
-            
+        driver.quit()
         return "Finviz photoscrape complete."
         
     def checkdir(self):
@@ -82,8 +80,7 @@ class FinvizVisualizer:
         else:
             os.makedirs(self.check_path)
             
-    ###add a way to add tickers to the optionvisualizer dataset
-    ###add a way to get industry from finviz and add to self.source_data
+    
         
 if __name__ == "__main__":
     fv = FinvizVisualizer()

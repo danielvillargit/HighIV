@@ -33,7 +33,7 @@ class OptionSearch:
         global path_adblock , options_ , driver , action
         
         
-        path_adblock=r'C:\Users\Daniel\Downloads\Adblock.crx'
+        path_adblock=r'C:\Users\Daniel\server_001\HighIV_2\Adblock.crx'
         options_= Options()
         options_.add_extension(path_adblock)
         driver = webdriver.Chrome(ChromeDriverManager().install(),options=options_)
@@ -72,11 +72,11 @@ class OptionSearch:
                 time.sleep(4)
                 
                 elem = driver.find_element_by_xpath("//*[contains(text(), 'Download Anyway' )]").click()
-                
+                iter_ = 2
             except NoSuchElementException:
                 print(r'CSV seems to contain < 1000 lines. This is iteration attempt {}.'.format(iter_))
                 time.sleep(4)
-                path_test = r'C:\Users\Daniel\Downloads\highest-implied-volatility-stocks-options-{}.csv'.format(current_date)
+                path_test = r'C:\Users\Daniel\Downloads\stocks-highest-implied-volatility-{}.csv'.format(current_date)
                 if os.path.isfile(path_test) == True:
                     continue
                 else:
@@ -113,7 +113,7 @@ class OptionSearch:
             IV_list_2 = IV_list_2[ IV_list_2['Price'] >= 10]
             del IV_list_2['index']
             
-            public_company_list = pd.read_csv(r'C:\Users\Daniel\Downloads\companylist.csv')
+            public_company_list = pd.read_csv(r'C:\Users\Daniel\server_001\HighIV_2\companylist.csv')
             public_company_list = pd.DataFrame(public_company_list)
             public_company_list = public_company_list.drop_duplicates(subset='Name',keep='last')
             public_company_list = public_company_list[ public_company_list['Exchange'].isin(['AMEX','NYSE','NQNM'])]
@@ -139,15 +139,7 @@ class OptionSearch:
         while iter_ < 3:
             try:    
                 
-                path_adblock=r'C:\Users\Daniel\Downloads\Adblock.crx'
-                options_= Options()
-                options_.add_extension(path_adblock)
-                driver = webdriver.Chrome(ChromeDriverManager().install(),options=options_)
-                driver.set_window_size(1024, 600)
-                driver.maximize_window()
-                action=ActionChains(driver)
-                action.move_by_offset(200, 100)
-                driver.implicitly_wait(1)
+                self.path_init()
             
                 #navigate to tradingview
                 
@@ -192,7 +184,7 @@ class OptionSearch:
                             #    elem.send_keys(Keys.BACKSPACE)
                     time.sleep(3)
                     
-                    file_name = r"C:\Pythonsaves\{}.png".format(i)
+                    file_name = r"C:\Users\Daniel\server_001\HighIV_2\Saves\{}.png".format(i)
                     driver.save_screenshot(file_name)
                     time.sleep(3)
                 
@@ -289,9 +281,9 @@ class OptionSearch:
         
 if __name__ == "__main__":
     r = OptionSearch()
-    r.path_init()
-    #r.BarchartImport()
-    r.OptionImport()
+    #r.path_init()
+    r.BarchartImport()
+    #r.OptionImport()
     #r.GetEarnings()
     r.TChart()
     
