@@ -22,14 +22,14 @@ class OptionVisualizer:
     def __init__(self):
         global download_path
         print("OptionVisualizer object created")
-        download_path = r'C:\Users\Daniel\server_001\HighIV_2'
+        download_path = r'C:\Users\Daniel\HighIV'
         self.csvcheck()
         
     def path_init(self,download_path):
         global path_adblock , options_ , driver , action
         
         
-        path_adblock=r'C:\Users\Daniel\server_001\HighIV_2\Adblock.crx'
+        path_adblock=r'C:\Users\Daniel\HighIV\Adblock.crx'
         options_= Options()
         
         if download_path is not None:
@@ -86,8 +86,6 @@ class OptionVisualizer:
         elem = driver.find_element_by_xpath("//a[contains(text(),'CSV')]").click()
         
         time.sleep(5)
-        
-        driver.quit()
         
         return r'{}\\tableExport.csv'.format(download_path)
         

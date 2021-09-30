@@ -20,7 +20,7 @@ class FinvizVisualizer:
         global current_date
         print("Finviz Visualizer Object Created")
         
-        self.download_path = r'C:\Users\Daniel\server_001\HighIV_2'
+        self.download_path = r'C:\Users\Daniel\HighIV'
         current_date = datetime.datetime.today()
         current_date = current_date.strftime("%Y-%m-%d")
         
@@ -33,7 +33,7 @@ class FinvizVisualizer:
         
         self.download_path = download_path
         
-        path_adblock=r'C:\Users\Daniel\server_001\HighIV_2\Adblock.crx'
+        path_adblock=r'C:\Users\Daniel\HighIV\Adblock.crx'
         options_= Options()
         
         if self.download_path is not None:
@@ -72,7 +72,7 @@ class FinvizVisualizer:
                 
             except Exception as exp:
                 print(exp)
-        driver.quit()
+            
         return "Finviz photoscrape complete."
         
     def checkdir(self):
