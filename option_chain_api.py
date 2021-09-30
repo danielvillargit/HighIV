@@ -8,7 +8,6 @@ Created on Mon Sep 13 23:05:57 2021
 import requests
 import pandas as pd
 from yahoofinancials import YahooFinancials as yf
-from selenium_barchart_2 import *
 import datetime
 
 def getdate():
@@ -44,7 +43,7 @@ def maincall(ticker_path):
     import_chain2 = pd.DataFrame(data=None,columns=column_list)
     
     for num,tick_ in enumerate(ticker["Ticker"]):
-        print((num+1) + "//" + len(ticker["Ticker"]))
+        print( str(num+1) + "//" + str(len(ticker["Ticker"])))
         for f in expiry:
             try:
                 
@@ -96,8 +95,8 @@ def maincall(ticker_path):
             
 
 if __name__ == "__main__":
-    path = r'C:\Users\Daniel\HighIV\opvis.csv'
-    csv_exportpath = r'C:\Users\Daniel\HighIV\opchain.csv'
+    path = r'C:\Users\Daniel\server_001\HighIV_2\opvis.csv'
+    csv_exportpath = r'C:\Users\Daniel\server_001\HighIV_2\opchain.csv'
     return_df = maincall(path)
     return_df.to_csv(csv_exportpath)
     
