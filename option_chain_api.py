@@ -27,10 +27,7 @@ def getdate():
 
 def maincall(ticker_path):
     
-    #ticker_data_selenium = OptionSearch()
-    #ticker_data_selenium.BarchartImport()
-    
-    #ticker = ticker_data_selenium.OptionImport()
+
     
     ticker = pd.read_csv(ticker_path)
     ticker = pd.DataFrame(ticker)
