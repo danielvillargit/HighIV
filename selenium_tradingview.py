@@ -22,12 +22,20 @@ class Tradingview:
     
     def __init__(self):
         print("Tradingview object created.")
-    
+        current_date = datetime.today()
+        current_date = current_date.strftime("%Y-%m-%d")
+        
+        self.getdata_path = r'C:\Users\Daniel\HighIV\opvis.csv'
+        self.path_adblock=r'C:\Users\Daniel\HighIV\Adblock.crx'
+        self.subfolder_tchart_path = r'C:\Users\Daniel\HighIV\{}'.format(current_date)
+        self.write_tchart_path = self.subfolder_tchart_path + r'\tradingview'
+        
+        self.folderWriter()
     
     def getdata(self):
         try:
             
-            get_data = pd.read_csv(r'C:\Users\Daniel\HighIV\opvis.csv')
+            get_data = pd.read_csv(self.getdata_path)
             get_data = pd.DataFrame(get_data)
             
             return get_data["Ticker"]
@@ -40,12 +48,12 @@ class Tradingview:
     
     def path_init(self):
         
-        global path_adblock , options_ , driver , action
+        global options_ , driver , action
         
         
-        path_adblock=r'C:\Users\Daniel\HighIV\Adblock.crx'
+        
         options_= Options()
-        options_.add_extension(path_adblock)
+        options_.add_extension(self.path_adblock)
         driver = webdriver.Chrome(ChromeDriverManager().install(),options=options_)
         driver.set_window_size(1024, 600)
         driver.maximize_window()
@@ -156,9 +164,11 @@ class Tradingview:
                             driver.refresh()
                             elem.send_keys(Keys.ENTER)
                     except:
-                        print("Join for free not prompted yet")
+                        pass
                     
-                    file_name = r"C:\Pythonsaves\{}.png".format(i)
+                    
+                    
+                    file_name = self.write_tchart_path + r'/{}.png'.format(i)
                     driver.save_screenshot(file_name)
                     time.sleep(3)
                 iter_ = 3
@@ -173,7 +183,7 @@ class Tradingview:
             
                 
             
-            
+    #under construction
     def removeTChart(self):
         iter_ = 1
         while iter_ <= 2:
@@ -195,6 +205,21 @@ class Tradingview:
                 print(e)
                 iter_ += 1
                 
+                
+    def folderWriter(self):
+        
+        if os.path.isdir(self.subfolder_tchart_path):
+            pass
+        
+            if os.path.isdir(self.write_tchart_path):
+                pass
+            
+            else:
+                os.makedirs(self.write_tchart_path)
+            
+        else:
+            os.makedirs(self.subfolder_tchart_path)
+            os.makedirs(self.write_tchart_path)
             
 if __name__ == "__main__":
     tv = Tradingview()
