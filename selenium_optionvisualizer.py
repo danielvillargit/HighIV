@@ -16,7 +16,7 @@ import json
 from datetime import *
 import time
 import os
-import yahoofinancials as yf
+import yfinance as yf
 
 
 class OptionVisualizer:
@@ -30,7 +30,7 @@ class OptionVisualizer:
         self.toke = 'H4WiYj0CVcFpz7hZeFpj9uxKJxcJ'
         self.btoke = r'Bearer {}'.format(self.toke)
         
-        self.csvcheck()
+        #self.csvcheck()
         
     def path_init(self,download_path):
         global options_ , driver , action
@@ -103,42 +103,37 @@ class OptionVisualizer:
     
     def csvFormat(self):
     
-        self.csv_df = pd.read_csv(self.csvget())
+        self.csv_df = pd.read_csv(r'{}\\tableExport.csv'.format(self.download_path))
         self.csv_df = pd.DataFrame(self.csv_df)
-        
-        for i,j in enumerate(self.csv_df):
-            
-            
-        
-        
-        
-        
-        
-        
-        
         
         self.csv_df = self.csv_df.drop_duplicates(subset='Ticker',keep='last')
         self.csv_df= self.csv_df[['Ticker','Security Name','Implied Volatility (Option)']]
         
+        self.csv_df = self.csv_df.reset_index()
+        del self.csv_df["index"]
+        
+        for i,j in enumerate(self.csv_df.index):
+            try:
+                
+                tick_res = yf.Ticker(self.csv_df.loc[i,"Ticker"])
+                sec = tick_res.info["sector"]
+                cp = tick_res.info["bid"]
+                self.csv_df.loc[i,"Sector"] = sec
+                self.csv_df.loc[i,"Price"] = cp
+                print(sec)
+                print(cp)
+                print(i)
+            except:
+                pass
+        self.csv_df = self.csv_df[self.csv_df["Price"] > 10]
+        
+        
         self.exit_path = self.download_path + "\\" + "opvis.csv"
         self.csv_df.to_csv(self.exit_path)
         
-        return self.csv_df
+        return self.exit_path
         # add optionality to search folder first instead of going straight to csvget. Actually scratch that lets see where it goes
-        
-    def getIndustryandPrice(self,dataframe_):
-        #This is a bit of a hybrid method similar to option_chain_api.py. It pulls industry and price information using the Tradier API
-        
-        #architecture constraint, loading in next 3 lines and will change later
-        self.csv_pi = dataframe_
-        
-        
-        
-        res = requests.get('https://sandbox.tradier.com/v1/markets/options/chains',
-                                   params={'symbol':tick_,'expiration': f , 'greeks': 'false'},
-                                   headers={'Authorization': self.btoke,'Accept': 'application/json'})
-                
-                json_response = res.json()
+
     
         
  
@@ -146,6 +141,6 @@ class OptionVisualizer:
     
 if __name__ == "__main__":
     ov = OptionVisualizer()
-    ov.csvfilter()
+    ov.csvFormat()
     
     
