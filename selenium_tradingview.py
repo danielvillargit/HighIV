@@ -56,10 +56,9 @@ class Tradingview:
 
     def viewSignIn(self):
         
-        #self.trading_user = str(input("Insert Tradingview Username: "))
-        #self.trading_pass = str(input("Insert Tradingview Password: "))
-        self.trading_user = "captaintx"
-        self.trading_pass = "Tradingview01"
+        self.trading_user = str(input("Insert Tradingview Username: "))
+        self.trading_pass = str(input("Insert Tradingview Password: "))
+        
         
         self.path_init()
         
