@@ -30,7 +30,7 @@ class OptionVisualizer:
         self.toke = 'H4WiYj0CVcFpz7hZeFpj9uxKJxcJ'
         self.btoke = r'Bearer {}'.format(self.toke)
         
-        #self.csvcheck()
+        self.csvcheck()
         
     def path_init(self,download_path):
         global options_ , driver , action
@@ -103,7 +103,7 @@ class OptionVisualizer:
     
     def csvFormat(self):
     
-        self.csv_df = pd.read_csv(r'{}\\tableExport.csv'.format(self.download_path))
+        self.csv_df = pd.read_csv(self.csvget())
         self.csv_df = pd.DataFrame(self.csv_df)
         
         self.csv_df = self.csv_df.drop_duplicates(subset='Ticker',keep='last')
