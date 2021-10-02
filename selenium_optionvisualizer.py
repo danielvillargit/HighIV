@@ -16,30 +16,35 @@ import json
 from datetime import *
 import time
 import os
+import yahoofinancials as yf
+
 
 class OptionVisualizer:
     
     def __init__(self):
         global download_path
         print("OptionVisualizer object created")
-        download_path = r'C:\Users\Daniel\server_001\HighIV_2'
+        self.download_path = r'C:\Users\Daniel\server_001\HighIV_2'
+        self.path_adblock=r'C:\Users\Daniel\server_001\HighIV_2\Adblock.crx'
         self.csvcheck()
         
     def path_init(self,download_path):
-        global path_adblock , options_ , driver , action
+        global options_ , driver , action
         
         
-        path_adblock=r'C:\Users\Daniel\server_001\HighIV_2\Adblock.crx'
+        self.download_path = download_path
+        
+        
         options_= Options()
         
-        if download_path is not None:
+        if self.download_path is not None:
             prefs = {}
             prefs["profile.default_content_settings.popups"] = 0
-            prefs["download.default_directory"] = download_path
+            prefs["download.default_directory"] = self.download_path
             options_.add_experimental_option("prefs",prefs)
         
         
-        #options_.add_extension(path_adblock)
+        #options_.add_extension(self.path_adblock)
         driver = webdriver.Chrome(ChromeDriverManager().install(),options=options_)
         driver.set_window_size(1024, 600)
         driver.maximize_window()
@@ -47,16 +52,16 @@ class OptionVisualizer:
         
     def csvcheck(self):
         
-        list_dir = os.listdir(download_path)
+        list_dir = os.listdir(self.download_path)
         for f in list_dir:
             if f == "tableExport.csv" or f == "opvis.csv":
-                os.remove(download_path +"\\" + f)
+                os.remove(self.download_path +"\\" + f)
         
         
     def csvget(self):
         
         
-        self.path_init(download_path)
+        self.path_init(self.download_path)
         
         driver.get("https://www.optionvisualizer.com/option-screener/highest-implied-volatility-options?o.days_before_expiration=manual|15|&o.implied_volatility=manual|60|&o.option_close=manual|0.10|&o.open_interest=manual|100|&o.volume=manual|500|&o.radio_option_type=manual|true|true&sort_by=o.implied_volatility&sort_order=desc")
         
@@ -89,7 +94,7 @@ class OptionVisualizer:
         
         driver.quit()
         
-        return r'{}\\tableExport.csv'.format(download_path)
+        return r'{}\\tableExport.csv'.format(self.download_path)
         
     
     def csvfilter(self):
@@ -100,8 +105,8 @@ class OptionVisualizer:
         csv_df = csv_df.drop_duplicates(subset='Ticker',keep='last')
         csv_df= csv_df[['Ticker','Security Name','Implied Volatility (Option)']]
         
-        exit_path = download_path + "\\" + "opvis.csv"
-        csv_df.to_csv(exit_path)
+        self.exit_path = self.download_path + "\\" + "opvis.csv"
+        csv_df.to_csv(self.exit_path)
         
         
     
