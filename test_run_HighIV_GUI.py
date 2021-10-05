@@ -177,6 +177,13 @@ b5.place(x=650,y=5)
 df_to_treeview(source_)
 
 
+class Frame(tk.Tk):
+    def __init__(self,*args,*kwargs):
+        super().__init__()
+        
+        self.title("HighIV")
+        self.mainloop()
+
 
 
 
