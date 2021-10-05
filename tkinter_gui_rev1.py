@@ -70,16 +70,16 @@ class FrameView:
         oc_return = oc.returncsv()
         
         self.cb2_sv = tk.StringVar()
-        cb_optiontype = ttk.Combobox(self.root,values=tuple(oc_return["option_type"].unique()),textvariable=self.cb2_sv)#postcommand = lambda: cb_optiontype.configure(values = oc_return )
+        cb_optiontype = ttk.Combobox(self.root,values=tuple(oc_return["option_type"].unique()),textvariable=self.cb2_sv)
         cb_optiontype.place(x=1285,y=40)
         cb_optiontype.bind("<<ComboboxSelected>>",self.sourcefilterquery)
         
         self.cb3_sv = tk.StringVar()
-        cb3 = ttk.Combobox(self.root,values=tuple(oc_return["expiration_date"].unique()),textvariable=self.cb3_sv)
-        cb3.place(x=1285,y=100)
-        cb3.bind("<<ComboboxSelected>>",self.sourcefilterquery)
+        self.cb3 = ttk.Combobox(self.root,values=self.dynamicCombo,textvariable=self.cb3_sv,postcommand = self.dynamicCombo)
+        self.cb3.place(x=1285,y=100)
+        self.cb3.bind("<<ComboboxSelected>>",self.sourcefilterquery)
         
-        self.df_to_treeview(oc_return)
+        #self.df_to_treeview(oc_return)
         
         self.b4b5_var = tk.IntVar()
         b4 = tk.Radiobutton(self.root,text="Show Option Chain",variable = self.b4b5_var, value = 1,command = self.toggleoption)
@@ -94,7 +94,16 @@ class FrameView:
         
         self.root.mainloop()
         
-    
+    def dynamicCombo(self):
+        self.str_ = self.ticker.get()
+        self.str_ = self.str_.replace(".png","")
+        tuple_ret = tuple(oc_return[oc_return["root_symbol"] == self.str_].expiration_date.unique())
+        if self.cb3_sv:
+            
+            self.cb3.configure(values = tuple_ret)
+        else:
+            return tuple_ret
+        
     
     def df_to_treeview(self,csv_sourcepath):
         
@@ -131,28 +140,19 @@ class FrameView:
     def toggleoption(self,*event):
         
         if self.b4b5_var.get() == 1:
-            
+            self.df_to_treeview(oc_return[(oc_return["root_symbol"] ==self.str_)  & (oc_return["expiration_date"] == self.cb3_sv.get()) & (oc_return["option_type"] == self.cb2_sv.get())   ])
+
             self.tv.place(x = 0,y = 580)
             
         if self.b4b5_var.get() == 2:
             
             self.tv.place_forget()
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
     def sourcefilterquery(self,*event):
         
         self.str_ = self.ticker.get()
         self.str_ = self.str_.replace(".png","")
         
-        self.df_to_treeview(oc_return[(oc_return["root_symbol"] ==self.str_)  & (oc_return["expiration_date"] == self.cb3_sv.get()) & (oc_return["option_type"] == self.cb2_sv.get())   ])
         self.toggleoption()
         
         
